@@ -35,5 +35,5 @@ $results =~ s/[\n|\r|\s]//g;
 
 my $control = 'Content-Type:text/html;charset=ISO-8859-1bar';
 
-is ($results,$control, "Do results match control?");
+is ($results, $control, "Do results match control?");
 

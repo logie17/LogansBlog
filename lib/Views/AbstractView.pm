@@ -29,8 +29,7 @@ sub html_header
     my $title       = $self->title;
     my $html_navbar = $self->html_navbar;
 
-    my $html = $self->{cgi_obj}->header;
-    $html .= qq~
+    my $html = qq~
 <?xml version="1.0" encoding="utf-8" ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >

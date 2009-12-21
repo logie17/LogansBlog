@@ -8,11 +8,15 @@ use CGI;
 # CONSTANTS
 #-------------------------------------------
 
-use constant LIB_PATH           => '/usr/home/logie17/public_html/loganbell.org/new_site/lib/';
-use constant DEFAULT_VIEW       => scalar 'Default';
-use constant DEFAULT_CONTROLLER => scalar 'Default';
-use constant CONTROLLER_BASE    => scalar 'Controllers';
-use constant VIEW_BASE          => scalar 'Views';
+use constant LIB_PATH                        => '/usr/home/logie17/public_html/loganbell.org/lib/';
+use constant DEFAULT_VIEW                    => scalar 'Default';
+use constant DEFAULT_CONTROLLER              => scalar 'Default';
+use constant CONTROLLER_BASE                 => scalar 'Controllers';
+use constant VIEW_BASE                       => scalar 'Views';
+
+# Error Messages
+use constant ERROR_NO_VIEW_CONTROLLER        => scalar 'There was an error1';
+use constant ERROR_VIEW_CONTROLLER_INVALID   => scalar 'There was an error2';
 
 #-------------------------------------------
 # PUBLIC METHODS
@@ -43,9 +47,10 @@ sub run
 {
     my ($self) = @_;
     
-    my $cgi     = $self->{cgi_obj};
-    my $action  = $cgi->param('action') || DEFAULT_CONTROLLER;
-    my $view    = $cgi->param('view') || DEFAULT_VIEW;
+    my $cgi_obj             = $self->{cgi_obj};
+    my $action          = $cgi_obj->param('action') || DEFAULT_CONTROLLER;
+    my $view            = $cgi_obj->param('view') || DEFAULT_VIEW;
+    my $return_html     = $cgi_obj->header;
 
     if ($action && $view)
     {
@@ -53,6 +58,9 @@ sub run
         my $view_file           = LIB_PATH . VIEW_BASE . '/' . $view . '.pm';
 
         eval "use lib LIB_PATH";
+
+        print STDERR $controller_file,"\n";
+        print STDERR $view_file,"\n";
 
         if ( -e $controller_file && -e $view_file )
         {
@@ -64,12 +72,23 @@ sub run
 
             my $data                = $controller_obj->$controller_method;
             
+            require "$view_file";
             my $view_class          = VIEW_BASE . '::' . $view;
-            my $view_obj            = $view_class->new( 'data_stack' => $data ); 
+            my $view_obj            = $view_class->new( 'cgi_obj' => $cgi_obj, 'data_stack' => $data ); 
 
-            return $cgi->header . $view_obj->output;
+            $return_html .= $view_obj->output;
+        }
+        else
+        {
+            $return_html .= ERROR_VIEW_CONTROLLER_INVALID . "\n";
         }
     }
+    else
+    {
+        $return_html .= ERROR_NO_VIEW_CONTROLLER;
+    }
+
+    return $return_html;
 
 }
 
