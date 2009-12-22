@@ -27,7 +27,7 @@ sub new
 # Input:    1. Class name
 # Output:   1. Blessed ref
 {
-    my ($class) = @_;
+    my ($class, %params) = @_;
 
     $class = ref $class || $class;
 
@@ -35,7 +35,7 @@ sub new
 
     bless ($self, $class);
 
-    return $self->_init;
+    return $self->_init(\%params);
     
 }
 
@@ -51,16 +51,14 @@ sub run
     my $action          = $cgi_obj->param('action') || DEFAULT_CONTROLLER;
     my $view            = $cgi_obj->param('view') || DEFAULT_VIEW;
     my $return_html     = $cgi_obj->header;
+    my $lib_path        = $self->{lib_path};
 
     if ($action && $view)
     {
-        my $controller_file     = LIB_PATH . CONTROLLER_BASE . '/' . $action . '.pm';
-        my $view_file           = LIB_PATH . VIEW_BASE . '/' . $view . '.pm';
+        my $controller_file     = $lib_path . CONTROLLER_BASE . '/' . $action . '.pm';
+        my $view_file           = $lib_path . VIEW_BASE . '/' . $view . '.pm';
 
-        eval "use lib LIB_PATH";
-
-        print STDERR $controller_file,"\n";
-        print STDERR $view_file,"\n";
+        eval "use lib $lib_path";
 
         if ( -e $controller_file && -e $view_file )
         {
@@ -101,9 +99,10 @@ sub _init
 # Input:    1. Ref to self
 # Output:   1. Ref to self
 {
-    my ($self) = @_;
+    my ($self, $params) = @_;
 
-    $self->{cgi_obj} = CGI->new;
+    $self->{cgi_obj}    = CGI->new;
+    $self->{lib_path}   = $params->{lib_path} || LIB_PATH;
 
     return $self;
 }

@@ -24,7 +24,7 @@ $mock_view->addMethod('output' =>sub{return 'bar'});
 #-------------------------------------------
 
 BEGIN { use_ok( 'Director', "Can we use Director?" ); }
-my $director_obj = Director->new;
+my $director_obj = Director->new(lib_path => '../lib/');
 
 isa_ok($director_obj, 'Director', "Is the object Director?");
 can_ok($director_obj, 'new');
