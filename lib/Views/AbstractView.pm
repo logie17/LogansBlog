@@ -268,7 +268,6 @@ sub _init
 {
     my ($self, $params) = @_;
 
-    $self->{cgi_obj}            = $params->{cgi_obj};
     $self->{_css_sheets_hr}     = {};
     $self->{_css_inline_hr}     = {};
 

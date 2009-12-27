@@ -8,7 +8,7 @@ use CGI;
 # CONSTANTS
 #-------------------------------------------
 
-use constant LIB_PATH                        => '/usr/home/logie17/public_html/loganbell.org/lib/';
+use constant LIB_PATH                        => '../lib/';
 use constant DEFAULT_VIEW                    => scalar 'Default';
 use constant DEFAULT_CONTROLLER              => scalar 'Default';
 use constant CONTROLLER_BASE                 => scalar 'Controllers';
