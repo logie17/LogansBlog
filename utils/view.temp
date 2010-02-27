@@ -1,0 +1,11 @@
+package Views::__NAME__;
+use base Views::AbstractView;
+
+sub output 
+{
+    my ($self) = @_;
+
+    return '';
+}
+
+1;

@@ -1,0 +1,12 @@
+package Controllers::__NAME__;
+
+use base Controllers::AbstractController;
+
+sub default
+{
+    my ($self) = @_;
+    
+    return;
+}
+
+1;
