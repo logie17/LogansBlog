@@ -3,14 +3,18 @@ package Director;
 use strict;
 use warnings;
 use CGI;
+use CGI::Session;
+use CGI::Carp qw(warningsToBrowser fatalsToBrowser carpout set_message); 
+
 
 #-------------------------------------------
 # CONSTANTS
 #-------------------------------------------
 
 use constant LIB_PATH                        => '../lib/';
+use constant DB_PATH                         => '../db/blog.db';
 use constant DEFAULT_VIEW                    => scalar 'Default';
-use constant DEFAULT_CONTROLLER              => scalar 'Default';
+use constant DEFAULT_ACTION                  => scalar 'index';
 use constant CONTROLLER_BASE                 => scalar 'Controllers';
 use constant VIEW_BASE                       => scalar 'Views';
 
@@ -35,6 +39,12 @@ sub new
 
     bless ($self, $class);
 
+    use IO::Handle;
+
+    open ERROR,  '>', "../logs/error.txt"  or die $!;
+
+    STDERR->fdopen( \*ERROR,  'w' ) or die $!;
+
     return $self->_init(\%params);
     
 }
@@ -47,34 +57,45 @@ sub run
 {
     my ($self) = @_;
     
-    my $cgi_obj             = $self->{cgi_obj};
-    my $action          = $cgi_obj->param('action') || DEFAULT_CONTROLLER;
-    my $view            = $cgi_obj->param('view') || DEFAULT_VIEW;
-    my $return_html     = $cgi_obj->header;
+    my $cgi_obj         = $self->{cgi_obj};
+    my $session_obj     = $self->{session_obj};
+    my $action          = lc $cgi_obj->param('action') || DEFAULT_ACTION;
+    my $view            = ucfirst $cgi_obj->param('view') || DEFAULT_VIEW;
+    my $return_html     = $session_obj->header;
     my $lib_path        = $self->{lib_path};
 
     if ($action && $view)
     {
-        my $controller_file     = $lib_path . CONTROLLER_BASE . '/' . $action . '.pm';
+        my $controller_file     = $lib_path . CONTROLLER_BASE . '/' . $view . '.pm';
         my $view_file           = $lib_path . VIEW_BASE . '/' . $view . '.pm';
 
         eval "use lib $lib_path";
 
-        if ( -e $controller_file && -e $view_file )
+        if ( -e $view_file )
         {
-            require "$controller_file";
+            my $data;
+            if ( -e $controller_file ) 
+            {
 
-            my $controller_class    = CONTROLLER_BASE . '::' . $action;
-            my $controller_obj      = $controller_class->new;
-            my $controller_method   = lc $view;
+                require "$controller_file";
 
-            my $data                = $controller_obj->$controller_method;
+            
+                my $controller_class    = CONTROLLER_BASE . '::' . $view;
+                my $controller_obj      = $controller_class->new( 'cgi_obj' => $cgi_obj, 'session_obj' => $session_obj );
+                my $controller_method   = lc $action;
+                if ( $controller_obj->can($controller_method) )
+                {
+                    $data                   = $controller_obj->$controller_method;
+                    $action                 = $controller_obj->action || $action;
+                }
+            }
+
             
             require "$view_file";
             my $view_class          = VIEW_BASE . '::' . $view;
-            my $view_obj            = $view_class->new( 'cgi_obj' => $cgi_obj, 'data_stack' => $data ); 
+            my $view_obj            = $view_class->new( 'cgi_obj' => $cgi_obj, 'session_obj' => $session_obj, 'data_stack' => $data , 'action' => $action); 
 
-            $return_html .= $view_obj->output;
+            $return_html            .= $view_obj->output;
         }
         else
         {
@@ -101,8 +122,9 @@ sub _init
 {
     my ($self, $params) = @_;
 
-    $self->{cgi_obj}    = CGI->new;
-    $self->{lib_path}   = $params->{lib_path} || LIB_PATH;
+    $self->{cgi_obj}        = CGI->new;
+    $self->{session_obj}    = CGI::Session->new("driver:sqlite", $self->{cgi_obj}, {DataSource => DB_PATH});
+    $self->{lib_path}       = $params->{lib_path} || LIB_PATH;
 
     return $self;
 }
@@ -133,6 +155,6 @@ Logan J. Bell (loganbell@loganbell.org)
 
 =head1 LICENSE
 
-Copyright (c) 2009 by Logan J Bell.  All rights reserved.  This program is
+Copyright (c) 2009-2010 by Logan J Bell.  All rights reserved.  This program is
 free software; you can redistribute it and/or modify it under the same terms
 as Perl itself.
