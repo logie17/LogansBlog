@@ -1,13 +1,15 @@
 package Views::Default;
 use base Views::AbstractView;
 
-sub _init
+sub index
 {
     my ($self) = @_;
 
-    $self->SUPER::_init;
+    my $data_hr = $self->{data_stack};
 
-    return $self;
+    my $html = join "", map { $_->html } @{$data_hr-{entries}};   
+
+    return $html;
 }
 
 1;
