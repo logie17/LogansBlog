@@ -109,7 +109,7 @@ sub create_template
     if ( $temp_contents )
     {
         $temp_contents =~ s/__NAME__/$class_name/g;
-        open ( my $fh, ">", $file_name ) || die "Unable to open file for writing - $file_name: $!";
+        open ( my $fh, ">", "$path/$file_name" ) || die "Unable to open file for writing - $path/$file_name: $!";
         print $fh $temp_contents;
         close $fh;
     } 
