@@ -59,6 +59,20 @@ sub html_navbar
 {
     my ($self) = @_;
 
+    my $session_obj = $self->{session_obj};
+
+    my $sesssion_div = '';
+    if ( my $first_name  = $session_obj->param("first_name") )
+    {
+        $session_div = 'Welcome ' . $first_name;    
+    }
+    else
+    {
+        $session_div = 'Welcome Guest<br/><a href="http://www.loganbell.org/pages/admin/index/">Login</a>';
+    }
+
+    
+    
     my $html = qq~
 		<div id="navbar">
 			<div class="headerbox_orange">entrees</div>
@@ -106,6 +120,9 @@ sub html_navbar
         			alt="Valid XHTML 1.0 Strict" height="31" width="88" border="0" /></a>
 			</div>
             <br/><br/>
+            <div id="session">
+                $session_div
+            </div>
 			<div id="tv"> 
 				<img src="./images/tv.png" width="150" height="209" />
 			</div>
@@ -140,6 +157,12 @@ sub html_content
 {
     my ($self) = @_;    
 
+    my $action = $self->{action};
+
+    if ( $action )
+    {
+        return $self->$action;
+    }
     return '';
 }
 
@@ -266,13 +289,17 @@ sub _init
 # Input:    1. Ref to self
 # Output:   1. Ref to self
 {
-    my ($self, $params) = @_;
+    my ($self, $params_hr) = @_;
 
     $self->{_css_sheets_hr}     = {};
     $self->{_css_inline_hr}     = {};
 
     $self->title(DEFAULT_TITLE);
     $self->styles(DEFAULT_STYLE_SHEET);
+
+    $self->{session_obj} = $params_hr->{session_obj};
+    $self->{action}      = $params_hr->{action} || 'index';
+    $self->{data_stack}  = $params_hr->{data_stack};
 
     $self->meta( 
                 keywords    => META_KEYWORDS, 
