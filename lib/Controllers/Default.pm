@@ -1,14 +1,15 @@
 package Controllers::Default;
 
+use Models::Entries;
 use base Controllers::AbstractController;
 
-sub default
+sub index
 {
-    my ($self) = @_;
-    
     my $entries = Models::Entries->get_entries;
 
-    return $entries;
+    my @entries_data = map { { title => $_->title, html => $_->html } } @$entries;
+
+    return { entries => \@entries_data };
 
 }
 
