@@ -30,9 +30,29 @@ sub _init
 # Input:    1. Ref to self
 # Output:   1. Ref to self
 {
-    my ($self, $params) = @_;
+    my ($self, $params_hr) = @_;
+
+    $self->{cgi_obj}        = $params_hr->{cgi_obj};
+    $self->{session_obj}    = $params_hr->{session_obj};
 
     return $self;
+}
+
+sub action
+# Purpose:  Updates action for view
+# Input:    1. Ref to self
+#           2. Action string            
+# Output:   1. None;
+{
+    my ($self, $action) = @_;
+
+    if ( $action )
+    {
+        $self->{action} = $action;
+    }
+
+    return $self->{action};
+
 }
 
 1;
