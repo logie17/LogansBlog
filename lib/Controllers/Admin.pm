@@ -1,6 +1,8 @@
 package Controllers::Admin;
 
 use base Controllers::AbstractController;
+use strict;
+use warnings;
 use Models::Authors;
 use Digest::MD5 qw(md5_hex);
 
@@ -57,4 +59,17 @@ sub login
     return $data_stack;
 }
 
+sub logout
+# Purpose:  Logs a user out
+# Input:    1. Ref to self  
+# Output:   None
+{
+    my ($self) = @_;
+    my $session_obj         = $self->{session_obj};
+    $session_obj->clear;
+
+    $self->view('default');
+    $self->action('index');
+
+}
 1;
