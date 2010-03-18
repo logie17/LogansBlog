@@ -17,6 +17,7 @@ use constant DEFAULT_VIEW                    => scalar 'Default';
 use constant DEFAULT_ACTION                  => scalar 'index';
 use constant CONTROLLER_BASE                 => scalar 'Controllers';
 use constant VIEW_BASE                       => scalar 'Views';
+use constant DEBUG                           => scalar 0;
 
 # Error Messages
 use constant ERROR_NO_VIEW_CONTROLLER        => scalar 'There was an error1';
@@ -39,11 +40,14 @@ sub new
 
     bless ($self, $class);
 
-    use IO::Handle;
+    if ( DEBUG )
+    {
+        require IO::Handle;
+        require Data::Dumper;
 
-    open ERROR,  '>', "../logs/error.txt"  or die $!;
-
-    STDERR->fdopen( \*ERROR,  'w' ) or die $!;
+        open ERROR,  '>', "../logs/error.txt"  or die $!;
+        STDERR->fdopen( \*ERROR,  'w' ) or die $!;
+    }
 
     return $self->_init(\%params);
     
@@ -87,10 +91,18 @@ sub run
                 {
                     $data                   = $controller_obj->$controller_method;
                     $action                 = $controller_obj->action || $action;
+                    if ( my $updated_view = ucfirst $controller_obj->view )
+                    {
+                        my $updated_view_file = $lib_path . VIEW_BASE . '/' . $updated_view . '.pm';
+                        if ( -e $updated_view_file )
+                        {
+                            $view_file = $updated_view_file; 
+                            $view      = $updated_view;
+                        }    
+                    }             
                 }
             }
 
-            
             require "$view_file";
             my $view_class          = VIEW_BASE . '::' . $view;
             my $view_obj            = $view_class->new( 'cgi_obj' => $cgi_obj, 'session_obj' => $session_obj, 'data_stack' => $data , 'action' => $action); 
@@ -115,6 +127,24 @@ sub run
 # PRIVATE METHODS
 #-------------------------------------------
 
+sub _gather_additional_parameters
+# Purpose:  Splits the "parameters" param and places the key/values into
+#           the query object            
+# Input:    1. A reference to self
+# Output:   None
+{
+    my ($self) = @_;
+
+    if ( my $parameters = $self->{cgi_obj}->param("parameters")  )
+    {
+        my @parameters = split(/\//,$parameters);        
+        $self->{cgi_obj}->param("parameters", \@parameters);
+    }
+    
+    return;
+
+}
+
 sub _init
 # Purpose:  Intializes the Director
 # Input:    1. Ref to self
@@ -125,6 +155,8 @@ sub _init
     $self->{cgi_obj}        = CGI->new;
     $self->{session_obj}    = CGI::Session->new("driver:sqlite", $self->{cgi_obj}, {DataSource => DB_PATH});
     $self->{lib_path}       = $params->{lib_path} || LIB_PATH;
+
+    $self->_gather_additional_parameters;
 
     return $self;
 }
