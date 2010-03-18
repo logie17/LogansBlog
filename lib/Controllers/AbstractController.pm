@@ -55,4 +55,22 @@ sub action
 
 }
 
+sub view
+# Purpose:  Updates view
+# Input:    1. Ref to self
+#           2. View string            
+# Output:   1. None;
+{
+    my ($self, $view) = @_;
+
+    if ( $view )
+    {
+        $self->{view} = $view;
+    }
+
+    return $self->{view};
+
+}
+
+
 1;
