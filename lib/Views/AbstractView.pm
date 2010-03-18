@@ -1,5 +1,7 @@
 package Views::AbstractView;
 
+use strict;
+use warnings;
 
 #-------------------------------------------
 # CONSTANT
@@ -30,7 +32,7 @@ sub html_header
     my $html_navbar = $self->html_navbar;
 
     my $html = qq~
-<?xml version="1.0" encoding="utf-8" ?> 
+<?xml version="1.0" encoding="iso-8859-1" ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
 <head>
@@ -61,14 +63,20 @@ sub html_navbar
 
     my $session_obj = $self->{session_obj};
 
-    my $sesssion_div = '';
+    my $session_div     = '';
+    my $admin_link      = '';
+    my $admin_link2     = '';
+
     if ( my $first_name  = $session_obj->param("first_name") )
     {
         $session_div = 'Welcome ' . $first_name;    
+        $admin_link  = '<a href="/pages/admin/logout">Logout</a>'; 
+        $admin_link2    = '<a href="/pages/admin/login">New Post</a>'; 
     }
     else
     {
-        $session_div = 'Welcome Guest<br/><a href="http://www.loganbell.org/pages/admin/index/">Login</a>';
+        $session_div    = 'Welcome Guest<br/><a href="http://www.loganbell.org/pages/admin/index/">Login</a>';
+        $admin_link     = '<a href="/pages/admin/login">Login</a>'; 
     }
 
     
@@ -81,6 +89,9 @@ sub html_navbar
 					<li><a href="/">blog</a></li>
 					<li><a href="/pages/misc/resume">resume</a></li>
 					<li><a href="/pages/misc/about">about</a></li>
+					<li><a href="/pages/misc/about">about</a></li>
+                    <li>$admin_link</li>
+                    <li>$admin_link2</li>
 				</ul>
 			</div>
 			<!--<div class="headerbox_orange">categories</div>
@@ -113,18 +124,18 @@ sub html_navbar
             <div id="delicious" class="box_brown">
             </div>
 			<div class="box_clear">
-                    RSS <a href="./rss.xml"><img src="./images/rss.png" border="0"/></a>
+                    RSS <a href="./rss.xml"><img src="http://www.loganbell.org/images/rss.png" width="14" height="14" alt="rss" /></a>
                     <br/>
     				<a href="http://validator.w3.org/check?uri=referer"><img
         			src="http://www.w3.org/Icons/valid-xhtml10"
-        			alt="Valid XHTML 1.0 Strict" height="31" width="88" border="0" /></a>
+        			alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
 			</div>
             <br/><br/>
             <div id="session">
                 $session_div
             </div>
 			<div id="tv"> 
-				<img src="./images/tv.png" width="150" height="209" />
+				<img src="http://www.loganbell.org/images/tv.png" width="150" height="209" alt="logan"/>
 			</div>
 		</div>
     ~;
@@ -159,11 +170,12 @@ sub html_content
 
     my $action = $self->{action};
 
-    if ( $action )
+    if ( $action && $self->can($action))
     {
         return $self->$action;
     }
-    return '';
+
+    return $self->page_does_not_exist;
 }
 
 sub new
@@ -195,6 +207,19 @@ sub meta
 
 }
 
+sub logged_in
+# Purpose:  Returns 1 if logged in else 0
+# Input:    1. Ref to self
+# Output:   1. Boolean          
+{
+    my ($self) = @_;
+
+    return;
+    #my $session_obj = $self->{session_obj};
+
+    #return $session_obj->param("first_name") ? 1 : 0;
+}
+
 sub output
 # Purpose:  Out all html markup
 # Input:    1. Ref to self
@@ -209,6 +234,16 @@ sub output
     return $header . $content . $footer;
 
     
+}
+
+sub page_does_not_exist
+# Purpose:  Builds out default 404
+# Input:    1. Ref to self
+# Output:   1. HTML
+{
+    my ($self) = @_;
+
+    return 'Wooop!';
 }
 
 sub styles
@@ -226,7 +261,7 @@ sub styles
     }
     else
     {
-        (my $minifed_css = $css) =~ s/[\r|\n|\s]//g;
+        (my $minified_css = $css) =~ s/[\r|\n|\s]//g;
         $self->{_css_inline_hr}->{$minified_css} = $css;
     }
 
