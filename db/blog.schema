@@ -1,0 +1,27 @@
+CREATE TABLE authors(
+id integer primary key autoincrement,
+nick varchar(250),
+first_name varchar(250),
+last_name varchar(250), username varchar(250), password varchar(250));
+CREATE TABLE comments (
+id integer primary key autoincrement,
+comment text,
+entry_id integer,
+user_id integer);
+CREATE TABLE entries (
+id integer primary key autoincrement,
+title varchar(250),
+markup text,
+html text,
+post_date date,
+author int
+);
+CREATE TABLE sessions (
+id char(32) not null primary key,
+a_session text not null);
+CREATE TABLE users (
+id integer primary key autoincrement,
+username varchar(250),
+password varchar(250),
+full_name varchar(250),
+email varchar(250));
