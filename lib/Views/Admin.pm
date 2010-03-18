@@ -1,7 +1,32 @@
 package Views::Admin;
 use base Views::AbstractView;
 
+#-------------------------------------------
+# CONSTANTS
+#-------------------------------------------
+
+#-------------------------------------------
+# ACTIONS
+#-------------------------------------------
+
+sub admintools
+# Purpose:  Admin tools view, only if logged in
+# Input:    1. Ref to self
+# Output:   1. HTML
+{
+    my ( $self) = @_;
+
+    if ( $self->logged_in )
+    {
+        return 'Welcome to admin tools';
+    }
+    
+}
+
 sub index
+# Purpose:  Index View
+# Input:    1. Ref to self
+# Output:   1. HTML
 {
     my ($self) = @_;
     my $data_hr = $self->{data_stack};
@@ -22,17 +47,10 @@ sub index
     return $return_html;
 }
 
-sub generate_errors
-{
-    my ( $self) = @_;
-
-    if ( my @errors = @_ )
-    {
-        $return_html .= join "<br/>", @errors;
-    }
-}
-
 sub login
+# Purpose:  Login View
+# Input:    1. Ref to self
+# Output:   1. HTML
 {
 
     my ($self ) = @_;
@@ -44,5 +62,24 @@ sub login
 
     return $return_html;
 }
+
+
+#-------------------------------------------
+# OTHER METHODS
+#-------------------------------------------
+
+sub _generate_errors
+# Purpose:  Helper method to format errors
+# Input:    1. Ref to self
+# Output:   1. HTML
+{
+    my ( $self) = @_;
+
+    if ( my @errors = @_ )
+    {
+        $return_html .= join "<br/>", @errors;
+    }
+}
+
 
 1;
