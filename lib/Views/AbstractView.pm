@@ -1,5 +1,6 @@
 package Views::AbstractView;
 
+use base SiteAttributes;
 use strict;
 use warnings;
 
@@ -18,6 +19,8 @@ use constant META_COPYRIGHT        => scalar 'Copyright 2009 (c) by Logan Bell';
 #-------------------------------------------
 # PUBLIC METHODS
 #-------------------------------------------
+
+our $attribute_dictionary = {};
 
 sub html_header
 # Purpose:  Html for header
@@ -81,7 +84,7 @@ sub html_navbar
 
     
     
-    my $html = qq~
+    my $html =<<EOF;
 		<div id="navbar">
 			<div class="headerbox_orange">entrees</div>
 			<div class="box_brown">
@@ -138,7 +141,7 @@ sub html_navbar
 				<img src="http://www.loganbell.org/images/tv.png" width="150" height="209" alt="logan"/>
 			</div>
 		</div>
-    ~;
+EOF
 
     return $html;
 }
@@ -170,7 +173,13 @@ sub html_content
 
     my $action = $self->{action};
 
-    if ( $action && $self->can($action))
+    my $has_view_hook = $self->can('view_hook') ? 1: 0;
+
+    if ( $has_view_hook && $self->view_hook )
+    {
+        return $self->$action;
+    }
+    elsif ( !$has_view_hook && $action && $self->can($action) )
     {
         return $self->$action;
     }
@@ -214,10 +223,9 @@ sub logged_in
 {
     my ($self) = @_;
 
-    return;
-    #my $session_obj = $self->{session_obj};
+    my $session_obj = $self->{session_obj};
 
-    #return $session_obj->param("first_name") ? 1 : 0;
+    return $session_obj->param("first_name") ? 1 : 0;
 }
 
 sub output
@@ -325,6 +333,19 @@ sub _init
 # Output:   1. Ref to self
 {
     my ($self, $params_hr) = @_;
+
+    my $class = ref $self;
+
+
+    # What is going on here?
+    # Creating a reference of class level attribute data
+    # See SiteAttributes for more information
+    no strict 'refs';
+
+    my $attribute_dictionary        = __PACKAGE__. '::attribute_dictionary';
+    $self->{attribute_dictionary}   = $$attribute_dictionary;
+
+    use strict;
 
     $self->{_css_sheets_hr}     = {};
     $self->{_css_inline_hr}     = {};
