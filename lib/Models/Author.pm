@@ -10,10 +10,42 @@ use warnings;
 __PACKAGE__->meta->setup
 (
     table   => 'authors',
-    columns => [ qw(id username password first_name last_name) ],
-    pk_columns => 'id'
+    columns => [ 
+        id          =>  
+        { 
+            type            => 'serial', 
+            primary_key     => 1, 
+            not_null        => 1, 
+        },
+        username    =>  
+        { 
+            type            =>  'varchar', 
+            length          => 255, 
+            not_null        => 1,   
+            default         => 'guest',
+        },
+        password    =>  { type  => 'varchar',    length  => 255 },
+        first_name  =>  { type  => 'varchar',    length => 255 },
+        last_name   =>  { type  => 'varchar',    length  => 255 },
+        type        =>  { type  => 'int'} 
+    ],
+    pk_columns => 'id',
+    foreign_keys => 
+    [
+        type => 
+        {
+            class       => 'Models::Type',
+            key_columns => {'type' => 'id'}
+        }
+
+    ]
 
 );
+
+sub foo
+{
+    return 'hi';    
+}
 
 sub init_db { Models::DB->new }
 

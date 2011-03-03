@@ -16,11 +16,18 @@ __PACKAGE__->meta->setup
 
 );
 
-#__PACKAGE__->meta->add_nonpersistent_columns('dt_obj');
+sub init_db 
+{ 
+    Models::DB->new;
+}
 
-
-
-sub init_db { Models::DB->new }
+sub friendly_post_date 
+{
+    my $self      = shift;
+    my $friendly  = $self->post_date(format => '%m/%d/%Y');
+    $friendly     =~ s/\s1$//g;
+    return $friendly;
+}
 
 
 1;

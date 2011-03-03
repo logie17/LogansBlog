@@ -1,4 +1,5 @@
 package Test::AbstractTest;
+
 use base Test::Class;
 
 use Test::MockModule;

@@ -1,6 +1,7 @@
 package Director;
 
 use strict;
+use Template;
 use warnings;
 use CGI;
 use CGI::Session;
@@ -12,12 +13,12 @@ use CGI::Carp qw(warningsToBrowser fatalsToBrowser carpout set_message);
 #-------------------------------------------
 
 use constant LIB_PATH                        => '../lib/';
-use constant DB_PATH                         => '../db/blog.db';
+use constant DB_PATH                         => '../db/prod_blog.db';
 use constant DEFAULT_VIEW                    => scalar 'Default';
 use constant DEFAULT_ACTION                  => scalar 'index';
 use constant CONTROLLER_BASE                 => scalar 'Controllers';
 use constant VIEW_BASE                       => scalar 'Views';
-use constant DEBUG                           => scalar 0;
+use constant DEBUG                           => scalar 1;
 
 # Error Messages
 use constant ERROR_NO_VIEW_CONTROLLER        => scalar 'There was an error1';
@@ -68,10 +69,16 @@ sub run
     my $return_html     = $session_obj->header;
     my $lib_path        = $self->{lib_path};
 
+    $self->{template_obj} = Template->new({
+         INCLUDE_PATH => '/usr/home/logie17/public_html/loganbell.org/lib/Views',
+         WRAPPER      => 'Wrapper.t',
+         INTERPOLATE  => 1
+    });
+
     if ($action && $view)
     {
         my $controller_file     = $lib_path . CONTROLLER_BASE . '/' . $view . '.pm';
-        my $view_file           = $lib_path . VIEW_BASE . '/' . $view . '.pm';
+        my $view_file           = $lib_path . VIEW_BASE . '/' . $view . '.t';
 
         eval "use lib $lib_path";
 
@@ -103,11 +110,12 @@ sub run
                 }
             }
 
-            require "$view_file";
-            my $view_class          = VIEW_BASE . '::' . $view;
-            my $view_obj            = $view_class->new( 'cgi_obj' => $cgi_obj, 'session_obj' => $session_obj, 'data_stack' => $data , 'action' => $action); 
+            my $output;
+            $self->{template_obj}->process($view . '.t',$data, \$output) || warn $self->{template_obj}->error(),"\n";
+                
+            $return_html .= $output;
+            return $return_html;
 
-            $return_html            .= $view_obj->output;
         }
         else
         {
@@ -153,6 +161,7 @@ sub _init
     my ($self, $params) = @_;
 
     $self->{cgi_obj}        = CGI->new;
+
     $self->{session_obj}    = CGI::Session->new("driver:sqlite", $self->{cgi_obj}, {DataSource => DB_PATH});
     $self->{lib_path}       = $params->{lib_path} || LIB_PATH;
 

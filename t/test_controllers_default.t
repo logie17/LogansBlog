@@ -1,7 +1,7 @@
 #! /usr/local/bin/perl
 
 use lib '../lib/';
-use Test::Controllers::Default;
+use Test::Models::Default;
 
-Test::Controllers::Default->runtests;
+Test::Models::Default->runtests;
 

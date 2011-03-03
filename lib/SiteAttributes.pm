@@ -11,7 +11,7 @@ no warnings 'redefine';
 # PUBLIC METHODS
 #-------------------------------------------
 
-sub UNIVERSAL::properties :ATTR(CODE, BEGIN)
+sub UNIVERSAL::Properties :ATTR(CODE, BEGIN)
 # Purpose: Sets persmissions - see perldoc Attribute::Hanlders
 {
     my ($package, $symbol, $referent, $attr, $data, $phase) = @_;
@@ -21,7 +21,7 @@ sub UNIVERSAL::properties :ATTR(CODE, BEGIN)
         {
             my $key = $data->[0];
             my $val = $data->[1];
-            $Views::AbstractView::attribute_dictionary->{$sub_address} = { $key = $val };
+            $Views::AbstractView::attribute_dictionary->{$sub_address} = { $key => $val };
         }
     } 
 
@@ -55,3 +55,4 @@ sub bar:properties(security=>'Users,Authors');
 }
 
 In order to setup the security parameters, these are located in configuration/properties/security.yaml
+Soon?
