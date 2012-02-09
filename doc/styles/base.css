@@ -215,13 +215,13 @@ ul.dkarrow li {
     margin: 0 0 20px 0;
 }
 
-.newsbox h2{
+.newsbox h2.tab_title{
 	margin: 0;
 	padding: 0;
 	font-size: 11px;
 }
 
-.newsbox h2 {
+.newsbox h2.tab_title {
 	border-left: solid 1px #B6B4B4;
 	border-top: solid 1px #B6B4B4;
 	border-right: solid 1px #B6B4B4;
