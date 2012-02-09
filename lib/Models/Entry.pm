@@ -3,6 +3,7 @@ package Models::Entry;
 use base Rose::DB::Object;
 use Models::DB;
 use DateTime;
+use HTML::Entities qw(encode_entities);
 
 use strict;
 use warnings;
@@ -27,6 +28,19 @@ sub friendly_post_date
     my $friendly  = $self->post_date(format => '%m/%d/%Y');
     $friendly     =~ s/\s1$//g;
     return $friendly;
+}
+
+sub escaped_html
+{
+    my $self = shift;
+    return encode_entities($self->html);
+}
+
+sub seo_title {
+    my $self = shift;
+    my $seo_title = $self->title;
+    $seo_title =~ s/\s/\-/g;
+    return lc $seo_title;
 }
 
 
