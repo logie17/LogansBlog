@@ -38,14 +38,7 @@
 				</table>
 			</div>-->
 			<div class="box_clear">
-                    RSS <a href="./rss.xml"><img src="http://www.loganbell.org/images/rss.png" width="14" height="14" alt="rss" /></a>
-                    <br/>
-    				<a href="http://validator.w3.org/check?uri=referer"><img
-        			src="http://www.w3.org/Icons/valid-xhtml10"
-        			alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+                    Feed <a href="http://www.loganbell.org/atom.xml"><img src="http://www.loganbell.org/images/rss.png" width="14" height="14" alt="rss" /></a>
 			</div>
             <br/><br/>
-			<div id="tv"> 
-				<img src="http://www.loganbell.org/images/tv.png" width="150" height="209" alt="logan"/>
-			</div>
 		</div>
