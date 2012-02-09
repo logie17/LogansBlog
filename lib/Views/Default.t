@@ -2,7 +2,7 @@
 [% FOREACH entry IN entries %]
         <div class="newsbox">
             <div class="body">
-                <h2><a href="http://www.loganbell.org/pages/post/view/[% entry.id %]/">[% entry.title %]</a></h2>
+                <h2 class="tab_title"><a href="http://www.loganbell.org/pages/post/view/[% entry.seo_title %]/">[% entry.title %]</a></h2>
                 [% entry.html %]
                 <div class="post_date">Posted On: [% entry.friendly_post_date %]</div> 
             </div>
