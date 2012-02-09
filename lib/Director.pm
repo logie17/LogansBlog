@@ -64,9 +64,11 @@ sub run
     
     my $cgi_obj         = $self->{cgi_obj};
     my $session_obj     = $self->{session_obj};
+    $cgi_obj->charset('utf-8');
     my $action          = lc $cgi_obj->param('action') || DEFAULT_ACTION;
     my $view            = ucfirst $cgi_obj->param('view') || DEFAULT_VIEW;
-    my $return_html     = $session_obj->header;
+    my $content_type    = $view =~ /Rss/ ? 'application/atom+xml' : 'text/html';
+    my $return_html     = $session_obj->header(-content_type => $content_type);
     my $lib_path        = $self->{lib_path};
 
     $self->{template_obj} = Template->new({
