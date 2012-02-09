@@ -2,8 +2,9 @@ DirectoryIndex index.html index.shtml index.cgi index.php index.php3 index.phtml
 AddHandler cgi-script .cgi .pl .rb .html .py
 Options +FollowSymlinks
 RewriteEngine on
-RewriteRule ^pages/articles/([^/]+) /index.html?action=index&view=article&id=$1 [NC]
+RewriteRule ^pages/articles/(\d+) /index.html?action=index&view=article&id=$1 [NC]
+RewriteRule ^pages/articles/([^\d]+) /index.html?action=index&view=article&title=$1 [NC]
 RewriteRule ^pages/misc/([^/]+) /index.html?action=pages&view=$1 [NC]
 RewriteRule ^pages/([^/]+)/([^/]+)/?(.*) /index.html?action=$2&view=$1&parameters=$3 [NC]
 RewriteRule ^projects/([^/]+) /index.html?action=projects&view=$1 [NC]
-RewriteRule ^rss.xml /index.html?view=rss&action=all [NC]
+RewriteRule ^atom.xml /index.html?view=rss&action=all [NC]
