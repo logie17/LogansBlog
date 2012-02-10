@@ -158,6 +158,18 @@ input {
 	font-size: 7.5pt;
 }
 
+ul.tags {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+    height: auto;
+}
+
+ul.tags li {
+    float: left;
+	margin: 0 5px 5px 0;
+}
+
 ul.dkarrow {
 	padding: 0;
 	margin: 0;
