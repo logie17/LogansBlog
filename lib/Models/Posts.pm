@@ -7,12 +7,10 @@ use strict;
 use warnings;
 
 
-__PACKAGE__->meta_setup
-(
+__PACKAGE__->meta_setup (
     table   => 'entries',
     colunns => [ qw(id title) ],
     pk_columns => 'id'
-
 );
 
 sub init_db { Models::DB->new }
