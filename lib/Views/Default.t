@@ -19,12 +19,12 @@
 <div class="post_navigation">
      <div id="previous_page">
     [% IF previous_page_number %]
-        <a href="/pages/default/index/[% previous_page_number %]/">Previous Page</a>
+        <a href="/pages/default/index/[% previous_page_number %]/">&#8672; Previous Page</a>
     [% END %]
      </div>       
      <div id="next_page">
     [% IF next_page_number %]
-        <a href="/pages/default/index/[% next_page_number %]">Next Page</a>
+        <a href="/pages/default/index/[% next_page_number %]">Next Page &#8674;</a>
     [% END %]
     </div>
 </div>

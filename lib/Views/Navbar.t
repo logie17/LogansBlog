@@ -23,7 +23,10 @@
 				</table>
 			</div>-->
 			<div class="box_clear">
+                <img width="170" height="22" srce="https://metacpan.org/activity?res=month&author=LOGIE" />
+                <div>
                     Feed <a href="http://www.loganbell.org/atom.xml"><img src="http://www.loganbell.org/images/rss.png" width="14" height="14" alt="rss" /></a>
+                </div>
 			</div>
             <br/><br/>
 		</div>
