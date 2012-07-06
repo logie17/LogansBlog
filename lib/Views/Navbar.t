@@ -1,5 +1,4 @@
 		<div id="navbar">
-			<div class="headerbox_orange">entrees</div>
 			<div class="box_brown">
 				<ul class="dkarrow">
 					<li><a href="/">blog</a></li>
@@ -11,20 +10,6 @@
                     [% END %]
 				</ul>
 			</div>
-			<!--<div class="headerbox_orange">categories</div>
-			<div class="box_brown">
-				<ul class="dkarrow">
-					<li><a href="#">perl</a></li>
-					<li style="margin:0;"><a href="#">general</a></li>
-				</ul>
-			</div>
-			<div class="headerbox_orange">archives</div>
-			<div class="box_brown">
-				<ul class="dkarrow">
-					<li><a href="#">December</a></li>
-					<li style="margin:0;"><a href="#">January</a></li>
-				</ul>
-			</div>-->
 			<!--<div class="headerbox_orange">site login</div>
 			<div class="box_brown">
 				<table>

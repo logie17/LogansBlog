@@ -26,7 +26,6 @@
             [% content %]
 		<div id="footer">&copy; 2012 Logan Bell. All rights reserved.</div>
 		</div>
-		<div id="squares"></div>
 	</div>
 </div>
 </body>
