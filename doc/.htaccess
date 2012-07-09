@@ -6,6 +6,6 @@ RewriteRule ^pages/articles/(\d+) /index.html?action=index&view=article&id=$1 [N
 RewriteRule ^pages/articles/([^\d]+) /index.html?action=index&view=article&title=$1 [NC]
 RewriteRule ^pages/misc/([^/]+) /index.html?action=pages&view=$1 [NC]
 RewriteRule ^pages/default/tags/([^/]+) /index.html?action=index&view=default&tag=$1 [NC]
-RewriteRule ^pages/([^/]+)/([^/]+)/?(.*) /index.html?action=$2&view=$1&parameters=$3 [NC]
+RewriteRule ^pages/([^/]+)/([^/]+)/?([^/]*) /index.html?action=$2&view=$1&parameters=$3 [NC]
 RewriteRule ^projects/([^/]+) /index.html?action=projects&view=$1 [NC]
 RewriteRule ^atom.xml /index.html?view=rss&action=all [NC]
