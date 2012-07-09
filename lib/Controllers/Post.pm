@@ -12,7 +12,7 @@ sub view
 
     if ( $cgi_obj->param('parameters') && $cgi_obj->param('parameters')->[0] =~ /^\d+$/ ) {
         $id = $cgi_obj->param('parameters')->[0];
-    } elsif ( $cgi_obj->param('parameters') && $cgi_obj->param('parameters')->[0] =~ /^[^\d]+$/ ) {
+    } elsif ( $cgi_obj->param('parameters') && $cgi_obj->param('parameters')->[0] =~ /^[\w-]+$/ ) {
         $title = $cgi_obj->param('parameters')->[0]; 
     }
 
